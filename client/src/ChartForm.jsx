@@ -1,5 +1,6 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import { Bar, Pie,Line, Doughnut, PolarArea, Radar } from "react-chartjs-2";
+import axios from 'axios'
 import {
   Chart as ChartJS,
   ArcElement,
@@ -70,6 +71,7 @@ const ChartForm = () => {
 
   const handleChartTypeChange = (e) => {
     setChartType(e.target.value);
+    
   };
   const options = {
     responsive: true,
@@ -96,6 +98,18 @@ const ChartForm = () => {
     },
   };
 
+  useEffect(() => {
+    if (chartData && chartType !== '') {
+      console.log('inside axios');
+      axios.post('http://localhost:5000/savedata', { chartData, chartType })
+        .then((response) => {
+          console.log('response is ', response);
+        })
+        .catch((error) => {
+          console.error('There was an error saving the data!', error);
+        });
+    }
+  }, [chartData, chartType]);
   console.log("data", chartData, chartType);
   return (
     <div>
